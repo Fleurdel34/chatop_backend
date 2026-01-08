@@ -1,4 +1,4 @@
-package com.example.chatop.models;
+package com.example.chatop.pojo;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -35,7 +35,7 @@ public class Rental {
 
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User user;
 
     private LocalDateTime created_date;

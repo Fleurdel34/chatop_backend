@@ -1,4 +1,4 @@
-package com.example.chatop.models;
+package com.example.chatop.pojo;
 
 import jakarta.persistence.*;
 import lombok.Getter;
