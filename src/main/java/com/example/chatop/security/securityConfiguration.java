@@ -33,11 +33,11 @@ public class securityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer:: disable)
                 .authorizeHttpRequests(authorize-> {
-                    authorize.requestMatchers(POST, "/api/auth/registrer").permitAll();
+                    authorize.requestMatchers(POST, "/api/auth/register").permitAll();
                     authorize.requestMatchers(POST, "/api/auth/login").permitAll();
                     authorize.anyRequest().authenticated();
                 })

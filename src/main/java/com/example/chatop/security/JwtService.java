@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.stereotype.Service;
@@ -35,17 +36,17 @@ public class JwtService {
     }
 
 
-
-    public Map<String, String> generate(String username){
-        User user = this.userService.loadUserByUsername(username);
+    @SneakyThrows
+    public Map<String, String> generate(String email){
+        User user = this.userService.loadUserByUsername(email);
         return this.generateJwt(user);
     }
 
-    private Map<String, String> generateJwt(User user) {
+    public Map<String, String> generateJwt(User user) {
 
         Map<String, String> claims = Map.of(
                 "name", user.getName(),
-                "username", user.getUsername()
+                "email", user.getEmail()
         );
 
         final long currentTime = System.currentTimeMillis();

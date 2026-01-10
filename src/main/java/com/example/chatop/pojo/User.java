@@ -22,7 +22,7 @@ import java.util.Collections;
 @Setter
 @Entity
 @Table(name = "user")
-public class User implements UserDetails {
+public  class User implements UserDetails {
 
     /**
      * Build Class user
@@ -40,7 +40,7 @@ public class User implements UserDetails {
 
     @Email
     @Column(nullable = false)
-    private String username;
+    private String email;
 
     @Column(nullable = false)
     private String password;
@@ -60,5 +60,11 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_"+this.role.getRole()));
     }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
 
 }

@@ -1,12 +1,13 @@
 package com.example.chatop.service;
 
 import com.example.chatop.enumeration.TypeRole;
+import com.example.chatop.exception.RequestException;
 import com.example.chatop.pojo.Role;
 import com.example.chatop.pojo.User;
 import com.example.chatop.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,20 +26,18 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder passwordEncoder;
 
 
-    public void registrer (User user){
 
-        if(!user.getUsername().contains("@")){
-            throw new RuntimeException("Votre mail est invalide");
+    @SneakyThrows
+    public void register (User user)  {
+
+        if(!user.getEmail().contains("@") || !user.getEmail().contains(".")){
+            throw new RequestException(RequestException.ErrorRequest.BAD_REQUEST_EXCEPTION,"Votre mail est invalide");
         }
 
-        if(!user.getUsername().contains(".")){
-            throw new RuntimeException("Votre mail est invalide");
-        }
-
-        Optional<User> userOptional = this.userRepository.findByUsername(user.getUsername());
+        Optional<User> userOptional = this.userRepository.findByEmail(user.getEmail());
 
         if(userOptional.isPresent()){
-            throw new RuntimeException("Votre mail est déjà utilisé");
+            throw new RequestException(RequestException.ErrorRequest.BAD_REQUEST_EXCEPTION,"Votre mail est déjà utilisé");
         }
 
         String cryptPassword = this.passwordEncoder.encode(user.getPassword());
@@ -52,11 +51,12 @@ public class UserService implements UserDetailsService {
 
     }
 
-    @Override
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return this.userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+    @SneakyThrows
+    @Override
+    public User loadUserByUsername(String email) {
+        return this.userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new RequestException(RequestException.ErrorRequest.UNAUTHORIZED_EXCEPTION,"Error: Authentification échouée"));
     }
 }

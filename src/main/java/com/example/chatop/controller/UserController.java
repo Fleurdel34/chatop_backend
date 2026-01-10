@@ -1,10 +1,12 @@
 package com.example.chatop.controller;
 
 import com.example.chatop.dto.AuthenticationDTO;
+import com.example.chatop.exception.RequestException;
 import com.example.chatop.pojo.User;
 import com.example.chatop.security.JwtService;
 import com.example.chatop.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,18 +35,27 @@ public class UserController {
     JwtService jwtService;
 
 
-    @PostMapping("/registrer")
-    public void registrer(@RequestBody User user){
-        this.userService.registrer(user);
+    @PostMapping("/register")
+    public Map<String, String> register(@RequestBody User user) {
+        this.userService.register(user);
+        return this.jwtService.generateJwt(user);
     }
 
+
+    @SneakyThrows
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody AuthenticationDTO authenticationDTO){
+
+        if(authenticationDTO.email() == null || authenticationDTO.password() == null){
+            throw new RequestException(RequestException.ErrorRequest.BAD_REQUEST_EXCEPTION, "Username ou password non renseignés");
+        }
+
         final Authentication authenticate = this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken
-                        (authenticationDTO.username(), authenticationDTO.password()));
+                        (authenticationDTO.email(), authenticationDTO.password()));
+
         if(authenticate.isAuthenticated()){
-            return this.jwtService.generate(authenticationDTO.username());
+            return this.jwtService.generate(authenticationDTO.email());
         }
         return null;
     }

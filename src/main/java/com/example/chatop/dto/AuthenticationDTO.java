@@ -2,9 +2,9 @@ package com.example.chatop.dto;
 
 /**
  * Create Record to recover two params of User
- * @param username
+ * @param email
  * @param password
  */
 
-public record AuthenticationDTO(String username, String password) {
+public record AuthenticationDTO(String email, String password) {
 }
