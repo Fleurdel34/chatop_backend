@@ -5,6 +5,10 @@ import com.example.chatop.exception.RequestException;
 import com.example.chatop.pojo.User;
 import com.example.chatop.security.JwtService;
 import com.example.chatop.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-/**
- * Build class UserController
- * Receive the request and provide the response
- * @property UserService
- * @requests Post regitrer and login an User
- */
+
+@Tag(name = "Users", description = "user management")
 @AllArgsConstructor
 @RestController
 @RequestMapping({"/api/auth"})
@@ -35,6 +35,10 @@ public class UserController {
     JwtService jwtService;
 
 
+
+    @Operation(summary = "register  user")
+    @ApiResponses({ @ApiResponse(responseCode = "200", description = "register user, create account and return JWTToken"),
+    @ApiResponse(responseCode = "400", description = "Bad Request")})
     @PostMapping("/register")
     public Map<String, String> register(@RequestBody User user) {
         this.userService.register(user);
@@ -42,6 +46,10 @@ public class UserController {
     }
 
 
+    @Operation(summary = "login  user")
+    @ApiResponses({ @ApiResponse(responseCode = "200", description = "login user account and return JWTToken"),
+    @ApiResponse(responseCode = "400", description = "Bad Request"),
+    @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @SneakyThrows
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody AuthenticationDTO authenticationDTO){
