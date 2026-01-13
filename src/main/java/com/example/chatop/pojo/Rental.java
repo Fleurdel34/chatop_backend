@@ -6,6 +6,12 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * Build Class Rental
+ * Set up properties (id , name, surface, price, picture, description, created_date, updated_date and join column id User)
+ * @Getter and @Setter allows the implementation of getter and setter
+ */
+
 
 @Getter
 @Setter
@@ -16,7 +22,7 @@ public class Rental {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Long id;
+    private Long rentalId;
 
     @Column(nullable = false)
     private String name;
@@ -35,7 +41,7 @@ public class Rental {
 
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
+    @JoinColumn(name = "owner_id")
     private User user;
 
     private LocalDateTime created_date;

@@ -8,6 +8,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.List;
 
+/**
+ * Create class with @ControllerAdvice
+ * Execute exception processing
+ * Use @ExceptionHandler
+ */
 
 @ControllerAdvice
 public class ResponseStatusExceptionHandler extends ResponseEntityExceptionHandler {

@@ -1,5 +1,6 @@
 package com.example.chatop.controller;
 
+import com.example.chatop.dto.AuthMeDTO;
 import com.example.chatop.dto.AuthenticationDTO;
 import com.example.chatop.exception.RequestException;
 import com.example.chatop.pojo.User;
@@ -35,7 +36,6 @@ public class UserController {
     JwtService jwtService;
 
 
-
     @Operation(summary = "register  user")
     @ApiResponses({ @ApiResponse(responseCode = "200", description = "register user, create account and return JWTToken"),
     @ApiResponse(responseCode = "400", description = "Bad Request")})
@@ -67,4 +67,13 @@ public class UserController {
         }
         return null;
     }
+
+    @Operation(summary = "return info user login")
+    @ApiResponses({ @ApiResponse(responseCode = "200", description = "Return information user connected with JwtToken"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")})
+    @GetMapping("/me")
+    public AuthMeDTO authMe() {
+        return this.userService.authMe();
+    }
+
 }

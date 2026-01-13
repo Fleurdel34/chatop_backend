@@ -4,6 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Build Class message
+ * Set up properties (id, message, join Column id User and id Rental)
+ * Implement constructor
+ * @Getter and @Setter allows the implementation of getter and setter
+ */
+
 @Getter
 @Setter
 @Entity

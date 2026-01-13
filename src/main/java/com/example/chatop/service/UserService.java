@@ -1,5 +1,6 @@
 package com.example.chatop.service;
 
+import com.example.chatop.dto.AuthMeDTO;
 import com.example.chatop.enumeration.TypeRole;
 import com.example.chatop.exception.RequestException;
 import com.example.chatop.pojo.Role;
@@ -7,6 +8,7 @@ import com.example.chatop.pojo.User;
 import com.example.chatop.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,6 @@ public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
-
 
 
     @SneakyThrows
@@ -58,5 +59,17 @@ public class UserService implements UserDetailsService {
         return this.userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new RequestException(RequestException.ErrorRequest.UNAUTHORIZED_EXCEPTION,"Error: Authentification échouée"));
+    }
+
+    public AuthMeDTO authMe(){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return new AuthMeDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getCreated_date(),
+                user.getUpdated_date()
+        );
     }
 }

@@ -4,6 +4,12 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Create class ErrorResponse
+ * Use @Data to generate constructor, setter and getter
+ */
+
+
 @Data
 public class ErrorResponse {
     private int Status;

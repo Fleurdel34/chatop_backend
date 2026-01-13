@@ -3,6 +3,12 @@ package com.example.chatop.exception;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Create class RequestException
+ * Execute exception processing
+ * Use enum
+ */
+
 @Getter
 @Setter
 public class RequestException extends Exception{
