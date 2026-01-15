@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(
                 title = "API chatop",
                 version = "1.0",
-                description = "Documentation de l'API chatop générée avec OpenAPI 3",
+                description = "Documentation de l'API avec OpenAPI 3",
                 contact = @Contact( name = "JK", email = "" ),
                 license = @License( name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0")))
 public class OpenApiConfig {

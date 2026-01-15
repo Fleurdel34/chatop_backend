@@ -1,6 +1,7 @@
 package com.example.chatop.security;
 
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,12 +46,19 @@ public class securityConfiguration {
                 .authorizeHttpRequests(authorize-> {
                     authorize.requestMatchers(POST, "/api/auth/register").permitAll();
                     authorize.requestMatchers(POST, "/api/auth/login").permitAll();
-                    authorize.requestMatchers("/v3/api-docs", "/swagger-ui.html","/swagger-ui/**" ).permitAll();
+                    authorize.requestMatchers("/v3/api-docs").permitAll();
                     authorize.anyRequest().authenticated();
                 })
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, ex) ->{
+                           response.sendError(
+                                   HttpServletResponse.SC_UNAUTHORIZED,
+                                   ex.getMessage()
+                           );
+                        }))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

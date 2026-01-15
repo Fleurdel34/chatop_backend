@@ -43,7 +43,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         final String authorization = request.getHeader("Authorization");
 
-
         if (authorization != null && authorization.startsWith("Bearer ")) {
             token = authorization.substring(7);
             isTokenExpired = jwtService.isTokenExpired(token);
@@ -57,5 +56,6 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+
     }
 }

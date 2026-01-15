@@ -9,8 +9,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 
 /**
@@ -29,6 +30,9 @@ public class RentalService {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         rental.setUser(user);
+
+        LocalDateTime dateTime = LocalDateTime.now();
+        rental.setCreated_date(dateTime);
 
         if(rental.getRentalId() == null){
             rentalRepository.save(rental);
@@ -67,7 +71,19 @@ public class RentalService {
     }
 
 
-    public Rental updateRentalById(Long id, Rental rental) {
+    public void updateRentalById(Long id, Rental rental) {
+
+        LocalDateTime dateTime = LocalDateTime.now();
+        Rental existRental = this.rentalRepository.findRentalByRentalId(id).orElse(null);
+
+        if(existRental!= null){
+            existRental.setName(rental.getName());
+            existRental.setSurface(rental.getSurface());
+            existRental.setPrice(rental.getPrice());
+            existRental.setDescription(rental.getDescription());
+            existRental.setUpdated_date(dateTime);
+            this.rentalRepository.save(existRental);
+        }
 
     }
 }

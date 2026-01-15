@@ -12,7 +12,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +33,23 @@ public class RentalController {
     @ApiResponses({ @ApiResponse(responseCode = "200", description = "create rental, authorized with JWTToken"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @PostMapping
-    public ResponseEntity<Map<String, String>> createRental(@RequestBody Rental rental) {
+    public ResponseEntity<Map<String, String>> createRental( @RequestParam("name") String name,
+                                                             @RequestParam("surface") int surface,
+                                                             @RequestParam("price") int price,
+                                                             @RequestParam("description") String description,
+                                                             @RequestParam("picture") MultipartFile picture) throws IOException {
+        String base64 = Base64.getEncoder().encodeToString(picture.getBytes());
+        String mimeType = picture.getContentType();
+        String base64Image = "data:" + mimeType + ";base64," + base64;
+         Rental rental = new Rental();
+         rental.setName(name);
+         rental.setSurface(surface);
+         rental.setPrice(price);
+         rental.setDescription(description);
+         rental.setPicture(base64Image);
+
         this.rentalService.createRental(rental);
+
         Map<String, String> response = Map.of(
                 "message", "Rental created!"
         );
@@ -55,11 +73,27 @@ public class RentalController {
     }
 
     @Operation(summary = "update one rental")
-    @ApiResponses({ @ApiResponse(responseCode = "200", description = "update one rentak, authorized with JWTToken"),
+    @ApiResponses({ @ApiResponse(responseCode = "200", description = "update one rental, authorized with JWTToken"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @PutMapping("/{id}")
-    public Rental updateRentalById(@PathVariable Long id, @RequestBody Rental rental) {
-        return this.rentalService.updateRentalById(id, rental);
+    public ResponseEntity<Map<String, String>> updateRentalById(@PathVariable Long id,
+                                                                @RequestParam("name") String name,
+                                                                @RequestParam("surface") int surface,
+                                                                @RequestParam("price") int price,
+                                                                @RequestParam("description") String description
+                                                               ) {
+
+        Rental rental = new Rental();
+        rental.setName(name);
+        rental.setSurface(surface);
+        rental.setPrice(price);
+        rental.setDescription(description);
+
+        this.rentalService.updateRentalById(id, rental);
+        Map<String, String> response = Map.of(
+                "message", "Rental updated!"
+        );
+        return ResponseEntity.ok(response);
     }
 
 }

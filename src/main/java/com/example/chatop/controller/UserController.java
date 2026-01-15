@@ -55,7 +55,7 @@ public class UserController {
     public Map<String, String> login(@RequestBody AuthenticationDTO authenticationDTO){
 
         if(authenticationDTO.email() == null || authenticationDTO.password() == null){
-            throw new RequestException(RequestException.ErrorRequest.BAD_REQUEST_EXCEPTION, "Username ou password non renseignés");
+            throw new RequestException(RequestException.ErrorRequest.BAD_REQUEST_EXCEPTION, "Username ou password not null");
         }
 
         final Authentication authenticate = this.authenticationManager.authenticate(

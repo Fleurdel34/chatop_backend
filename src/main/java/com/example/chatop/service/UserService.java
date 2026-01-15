@@ -1,10 +1,13 @@
 package com.example.chatop.service;
 
 import com.example.chatop.dto.AuthMeDTO;
+import com.example.chatop.dto.OwnerDTO;
 import com.example.chatop.enumeration.TypeRole;
 import com.example.chatop.exception.RequestException;
+import com.example.chatop.pojo.Rental;
 import com.example.chatop.pojo.Role;
 import com.example.chatop.pojo.User;
+import com.example.chatop.repository.RentalRepository;
 import com.example.chatop.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -13,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -26,20 +30,24 @@ public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
+    private RentalRepository rentalRepository;
 
 
     @SneakyThrows
     public void register (User user)  {
 
         if(!user.getEmail().contains("@") || !user.getEmail().contains(".")){
-            throw new RequestException(RequestException.ErrorRequest.BAD_REQUEST_EXCEPTION,"Votre mail est invalide");
+            throw new RequestException(RequestException.ErrorRequest.BAD_REQUEST_EXCEPTION,"invalid email");
         }
 
         Optional<User> userOptional = this.userRepository.findByEmail(user.getEmail());
 
         if(userOptional.isPresent()){
-            throw new RequestException(RequestException.ErrorRequest.BAD_REQUEST_EXCEPTION,"Votre mail est déjà utilisé");
+            throw new RequestException(RequestException.ErrorRequest.BAD_REQUEST_EXCEPTION,"mail is already in use");
         }
+
+        LocalDateTime dateTime = LocalDateTime.now();
+        user.setCreated_date(dateTime);
 
         String cryptPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(cryptPassword);
@@ -58,7 +66,7 @@ public class UserService implements UserDetailsService {
     public User loadUserByUsername(String email) {
         return this.userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new RequestException(RequestException.ErrorRequest.UNAUTHORIZED_EXCEPTION,"Error: Authentification échouée"));
+                .orElseThrow(() -> new RequestException(RequestException.ErrorRequest.UNAUTHORIZED_EXCEPTION,"Error: Authentification failed"));
     }
 
     public AuthMeDTO authMe(){
@@ -72,4 +80,25 @@ public class UserService implements UserDetailsService {
                 user.getUpdated_date()
         );
     }
+
+    public OwnerDTO getUserById(Long id){
+        Rental rental = this.rentalRepository.findRentalByUser_Id(id).orElse(null);
+        User user = this.userRepository.findById(id).orElse(null);
+
+        assert rental != null;
+        assert user != null;
+
+        if(user.getId().equals(rental.getUser().getId())){
+            return new OwnerDTO(
+                    user.getId(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getCreated_date(),
+                    user.getUpdated_date()
+            );
+        };
+        return null;
+    }
+
+
 }
