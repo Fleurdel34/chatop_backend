@@ -2,7 +2,6 @@ package com.example.chatop.controller;
 
 import com.example.chatop.exception.RequestException;
 import com.example.chatop.pojo.Message;
-import com.example.chatop.pojo.Rental;
 import com.example.chatop.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,7 +31,6 @@ public class MessageController {
             @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @PostMapping
     public ResponseEntity<Map<String, String>> createMessage(@RequestBody Message message) throws RequestException {
-
         this.messageService.createMessage(message);
         Map<String, String> response = Map.of(
                 "message", "Message send with success"

@@ -26,21 +26,20 @@ public class Message {
     @Column(nullable = false)
     private String message;
 
+    @Column(nullable = false)
+    private Long user_id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(nullable = false)
+    private Long rental_id;
 
-    @ManyToOne
-    @JoinColumn(name = "rental_id", nullable = false)
-    private Rental rental;
+    public Message(String message, Long user_id, Long rental_id) {
+        this.message = message;
+        this.user_id = user_id;
+        this.rental_id = rental_id;
+    }
 
     public Message() {
     }
 
-    public Message(String message, User user, Rental rental) {
-        this.message = message;
-        this.user = user;
-        this.rental = rental;
-    }
+
 }
