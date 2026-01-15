@@ -82,13 +82,13 @@ public class UserService implements UserDetailsService {
     }
 
     public OwnerDTO getUserById(Long id){
-        Rental rental = this.rentalRepository.findRentalByUser_Id(id).orElse(null);
-        User user = this.userRepository.findById(id).orElse(null);
+        Optional<Rental> rentalList = this.rentalRepository.findAllRentalByUser_Id(id)
+                .stream().findFirst();
 
-        assert rental != null;
-        assert user != null;
-
-        if(user.getId().equals(rental.getUser().getId())){
+        if(rentalList.isPresent()){
+            Long ownerId = rentalList.get().getUser().getId();
+            User user = this.userRepository.findById(ownerId).orElse(null);
+            assert user != null;
             return new OwnerDTO(
                     user.getId(),
                     user.getName(),
@@ -99,6 +99,4 @@ public class UserService implements UserDetailsService {
         };
         return null;
     }
-
-
 }
