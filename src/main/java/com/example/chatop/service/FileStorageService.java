@@ -16,6 +16,9 @@ public class FileStorageService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    @Value("${base-url}")
+    private String urlApi;
+
     public String storeFile(MultipartFile file) throws IOException {
 
         Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
@@ -25,6 +28,7 @@ public class FileStorageService {
 
         Path target = uploadPath.resolve(fileName);
         Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
-        return "/files/" + fileName;
+
+        return urlApi + "/files/" + fileName;
     }
 }
