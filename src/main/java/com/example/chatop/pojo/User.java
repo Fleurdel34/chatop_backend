@@ -9,9 +9,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
-import java.time.LocalDateTime;
+
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 
 /**
  * @author johanna
@@ -26,7 +27,7 @@ public  class User implements UserDetails {
 
     /**
      * Build Class user
-     * Set up properties (id, name, email(username), password, created_date, updated_date and role)
+     * Set up properties (id, name, email(username), password, created_date, updated_at and role)
      * Implement constructor
      * @Getter and @Setter allows the implementation of getter and setter
      */
@@ -48,9 +49,9 @@ public  class User implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     private Role role;
 
-    private LocalDateTime created_date;
+    private Date created_at;
 
-    private LocalDateTime updated_date;
+    private Date updated_at;
 
 
     public User() {

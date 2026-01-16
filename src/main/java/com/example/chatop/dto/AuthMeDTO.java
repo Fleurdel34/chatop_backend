@@ -1,12 +1,13 @@
 package com.example.chatop.dto;
 
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 public record AuthMeDTO(
-        Long Id,
+        Long id,
         String name,
         String email,
-        LocalDateTime created_date,
-        LocalDateTime updated_date
+        Date created_at,
+        Date updated_at
 ) {
 }

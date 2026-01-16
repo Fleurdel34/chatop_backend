@@ -3,6 +3,7 @@ package com.example.chatop.controller;
 
 import com.example.chatop.dto.RentalDTO;
 import com.example.chatop.pojo.Rental;
+import com.example.chatop.service.FileStorageService;
 import com.example.chatop.service.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,8 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,8 @@ public class RentalController {
 
     @Autowired
     RentalService rentalService;
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Operation(summary = "create rental")
     @ApiResponses({ @ApiResponse(responseCode = "200", description = "create rental, authorized with JWTToken"),
@@ -38,17 +41,16 @@ public class RentalController {
                                                              @RequestParam("price") int price,
                                                              @RequestParam("description") String description,
                                                              @RequestParam("picture") MultipartFile picture) throws IOException {
-        String base64 = Base64.getEncoder().encodeToString(picture.getBytes());
-        String mimeType = picture.getContentType();
-        String base64Image = "data:" + mimeType + ";base64," + base64;
+
+        String pictureUrl = fileStorageService.storeFile(picture);
          Rental rental = new Rental();
          rental.setName(name);
          rental.setSurface(surface);
          rental.setPrice(price);
          rental.setDescription(description);
-         rental.setPicture(base64Image);
+         rental.setPicture(pictureUrl);
 
-        this.rentalService.createRental(rental);
+         this.rentalService.createRental(rental);
 
         Map<String, String> response = Map.of(
                 "message", "Rental created!"
@@ -60,7 +62,7 @@ public class RentalController {
     @ApiResponses({ @ApiResponse(responseCode = "200", description = "find all rentals, authorized with JWTToken"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @GetMapping
-    public List<RentalDTO> getAllRentals() {
+    public Map<String, Object> getAllRentals() {
         return this.rentalService.getRentalsAll();
     }
 

@@ -16,7 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -46,8 +47,8 @@ public class UserService implements UserDetailsService {
             throw new RequestException(RequestException.ErrorRequest.BAD_REQUEST_EXCEPTION,"mail is already in use");
         }
 
-        LocalDateTime dateTime = LocalDateTime.now();
-        user.setCreated_date(dateTime);
+        Date dateTime = new Date();
+        user.setCreated_at(dateTime);
 
         String cryptPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(cryptPassword);
@@ -76,8 +77,8 @@ public class UserService implements UserDetailsService {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
-                user.getCreated_date(),
-                user.getUpdated_date()
+                user.getCreated_at(),
+                user.getUpdated_at()
         );
     }
 
@@ -93,8 +94,8 @@ public class UserService implements UserDetailsService {
                     user.getId(),
                     user.getName(),
                     user.getEmail(),
-                    user.getCreated_date(),
-                    user.getUpdated_date()
+                    user.getCreated_at(),
+                    user.getUpdated_at()
             );
         };
         return null;

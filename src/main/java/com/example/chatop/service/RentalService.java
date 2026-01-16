@@ -9,9 +9,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
 
+
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -31,41 +35,46 @@ public class RentalService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         rental.setUser(user);
 
-        LocalDateTime dateTime = LocalDateTime.now();
-        rental.setCreated_date(dateTime);
+        Date dateTime = new Date();
+        rental.setCreated_at(dateTime);
 
-        if(rental.getRentalId() == null){
+        if(rental.getId() == null){
+
             rentalRepository.save(rental);
         }
     }
 
-    public List<RentalDTO> getRentalsAll(){
-        return this.rentalRepository.findAll().stream()
+    public Map<String, Object> getRentalsAll(){
+
+        List<RentalDTO> rentals = this.rentalRepository.findAll().stream()
                 .map(rental -> new RentalDTO(
-                rental.getRentalId(),
-                rental.getName(),
-                rental.getSurface(),
-                rental.getPrice(),
-                rental.getPicture(),
-                rental.getDescription(),
-                rental.getUser().getId(),
-                rental.getCreated_date(),
-                rental.getUpdated_date()
-        )).toList();
+                        rental.getId(),
+                        rental.getName(),
+                        rental.getSurface(),
+                        rental.getPrice(),
+                        rental.getPicture(),
+                        rental.getDescription(),
+                        rental.getUser().getId(),
+                        rental.getCreated_at(),
+                        rental.getUpdated_at() )).toList();
+        Map<String, Object> response = new HashMap<>();
+        response.put("rentals", rentals);
+        return response;
+
     }
 
     public RentalDTO getRentalById(Long id){
-         return rentalRepository.findRentalByRentalId(id)
+         return rentalRepository.findRentalById(id)
                  .map(rental-> new RentalDTO(
-                 rental.getRentalId(),
+                 rental.getId(),
                  rental.getName(),
                  rental.getSurface(),
                  rental.getPrice(),
                  rental.getPicture(),
                  rental.getDescription(),
                  rental.getUser().getId(),
-                 rental.getCreated_date(),
-                 rental.getUpdated_date()
+                 rental.getCreated_at(),
+                 rental.getUpdated_at()
                  )).orElse(null);
 
     }
@@ -73,17 +82,17 @@ public class RentalService {
 
     public void updateRentalById(Long id, Rental rental) {
 
-        LocalDateTime dateTime = LocalDateTime.now();
-        Rental existRental = this.rentalRepository.findRentalByRentalId(id).orElse(null);
+        Date dateTime = new Date();
+        Rental existRental = this.rentalRepository.findRentalById(id).orElse(null);
 
         if(existRental!= null){
             existRental.setName(rental.getName());
             existRental.setSurface(rental.getSurface());
             existRental.setPrice(rental.getPrice());
             existRental.setDescription(rental.getDescription());
-            existRental.setUpdated_date(dateTime);
+            existRental.setUpdated_at(dateTime);
             this.rentalRepository.save(existRental);
         }
-
     }
+
 }

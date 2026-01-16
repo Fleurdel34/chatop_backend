@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 /** Create account to access api
@@ -46,19 +47,12 @@ public class securityConfiguration {
                 .authorizeHttpRequests(authorize-> {
                     authorize.requestMatchers(POST, "/api/auth/register").permitAll();
                     authorize.requestMatchers(POST, "/api/auth/login").permitAll();
-                    authorize.requestMatchers("/v3/api-docs").permitAll();
+                    authorize.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html" ).permitAll();
                     authorize.anyRequest().authenticated();
                 })
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint((request, response, ex) ->{
-                           response.sendError(
-                                   HttpServletResponse.SC_UNAUTHORIZED,
-                                   ex.getMessage()
-                           );
-                        }))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

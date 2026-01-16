@@ -4,11 +4,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 /**
  * Build Class Rental
- * Set up properties (id , name, surface, price, picture, description, created_date, updated_date and join column id User)
+ * Set up properties (id , name, surface, price, picture, description, created_date, updated_at and join column id User)
  * @Getter and @Setter allows the implementation of getter and setter
  */
 
@@ -22,7 +23,7 @@ public class Rental {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Long rentalId;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -33,7 +34,8 @@ public class Rental {
     @Column(nullable = false)
     private Integer price;
 
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable= false , columnDefinition = "LONGTEXT")
     private String picture;
 
     @Column(nullable = false)
@@ -44,22 +46,22 @@ public class Rental {
     @JoinColumn(name = "owner_id")
     private User user;
 
-    private LocalDateTime created_date;
+    private Date created_at;
 
-    private LocalDateTime updated_date;
+    private Date updated_at;
 
 
     public Rental() {
     }
 
-    public Rental(String name, Integer surface, Integer price, String picture, String description, User user, LocalDateTime created_date, LocalDateTime updated_date) {
+    public Rental(String name, Integer surface, Integer price, String picture, String description, User user, Date created_at, Date updated_at) {
         this.name = name;
         this.surface = surface;
         this.price = price;
         this.picture = picture;
         this.description = description;
         this.user = user;
-        this.created_date = created_date;
-        this.updated_date = updated_date;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
     }
 }

@@ -63,7 +63,7 @@ public class JwtService {
                 .setClaims(claims)
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
-        return Map.of("bearer", bearer);
+        return Map.of("token", bearer);
     }
 
     private Key getKey(){
