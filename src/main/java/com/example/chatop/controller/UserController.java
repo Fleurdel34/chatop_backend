@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,7 +54,7 @@ public class UserController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @SneakyThrows
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody AuthenticationDTO authenticationDTO){
+    public ResponseEntity<Map<String, String>> login(@RequestBody AuthenticationDTO authenticationDTO){
 
         if(authenticationDTO.email() == null || authenticationDTO.password() == null){
             throw new RequestException(RequestException.ErrorRequest.BAD_REQUEST_EXCEPTION, "Username ou password not null");
@@ -62,18 +64,20 @@ public class UserController {
                 new UsernamePasswordAuthenticationToken
                         (authenticationDTO.email(), authenticationDTO.password()));
 
-        if(authenticate.isAuthenticated()){
-            return this.jwtService.generate(authenticationDTO.email());
+        if(!authenticate.isAuthenticated()){
+            return null;
         }
-        return null;
+        Map<String, String> token = this.jwtService.generate(authenticationDTO.email());
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
     @Operation(summary = "return info user login")
     @ApiResponses({ @ApiResponse(responseCode = "200", description = "Return information user connected with JwtToken"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @GetMapping("/me")
-    public AuthMeDTO authMe() {
-        return this.userService.authMe();
+    public ResponseEntity<AuthMeDTO> authMe() {
+        AuthMeDTO authMeDTO = this.userService.authMe();
+        return new ResponseEntity<>(authMeDTO, HttpStatus.OK);
     }
 
 }

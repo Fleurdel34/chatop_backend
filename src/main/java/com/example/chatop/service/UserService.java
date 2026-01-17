@@ -67,7 +67,7 @@ public class UserService implements UserDetailsService {
     public User loadUserByUsername(String email) {
         return this.userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new RequestException(RequestException.ErrorRequest.UNAUTHORIZED_EXCEPTION,"Error: Authentification failed"));
+                .orElseThrow(() -> new RequestException(RequestException.ErrorRequest.UNAUTHORIZED_EXCEPTION,"Error"));
     }
 
     public AuthMeDTO authMe(){

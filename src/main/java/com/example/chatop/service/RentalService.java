@@ -10,8 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
-
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +37,6 @@ public class RentalService {
         rental.setCreated_at(dateTime);
 
         if(rental.getId() == null){
-
             rentalRepository.save(rental);
         }
     }

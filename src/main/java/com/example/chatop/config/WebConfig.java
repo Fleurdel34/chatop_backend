@@ -7,6 +7,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Create WebConf
+ * Execute handling picture
+ */
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -15,6 +20,6 @@ public class WebConfig implements WebMvcConfigurer {
 
         Path uploadDir = Paths.get("uploads").toAbsolutePath().normalize();
         registry.addResourceHandler("/files/**")
-                .addResourceLocations(uploadDir.toUri().toString());
+                .addResourceLocations("file:" + uploadDir + "/");
     }
 }

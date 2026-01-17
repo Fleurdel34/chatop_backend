@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * Create Record to recover two params of Rental
- * @param id, name, surface, price, picture, description, ownerId, created_date, updated-date
+ * @param id, name, surface, price, picture, description, owner_id, created_at, updated_at
  */
 
 public record RentalDTO(

@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * Build Class Rental
- * Set up properties (id , name, surface, price, picture, description, created_date, updated_at and join column id User)
+ * Set up properties (id , name, surface, price, picture, description, created_at, updated_at and join column id User)
  * @Getter and @Setter allows the implementation of getter and setter
  */
 

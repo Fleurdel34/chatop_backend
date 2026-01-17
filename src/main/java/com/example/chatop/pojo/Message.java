@@ -6,7 +6,7 @@ import lombok.Setter;
 
 /**
  * Build Class message
- * Set up properties (id, message, join Column id User and id Rental)
+ * Set up properties (id, message, user_id and rental_id)
  * Implement constructor
  * @Getter and @Setter allows the implementation of getter and setter
  */

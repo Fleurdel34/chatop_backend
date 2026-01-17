@@ -11,13 +11,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 
@@ -42,7 +42,7 @@ public class RentalController {
                                                              @RequestParam("description") String description,
                                                              @RequestParam("picture") MultipartFile picture) throws IOException {
 
-        String pictureUrl = fileStorageService.storeFile(picture);
+         String pictureUrl = fileStorageService.storeFile(picture);
          Rental rental = new Rental();
          rental.setName(name);
          rental.setSurface(surface);
@@ -52,26 +52,28 @@ public class RentalController {
 
          this.rentalService.createRental(rental);
 
-        Map<String, String> response = Map.of(
+         Map<String, String> response = Map.of(
                 "message", "Rental created!"
-        );
-        return ResponseEntity.ok(response);
+         );
+         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "findAll  rentals")
     @ApiResponses({ @ApiResponse(responseCode = "200", description = "find all rentals, authorized with JWTToken"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @GetMapping
-    public Map<String, Object> getAllRentals() {
-        return this.rentalService.getRentalsAll();
+    public ResponseEntity<Map<String, Object>> getAllRentals() {
+       Map<String, Object> rentals = this.rentalService.getRentalsAll();
+       return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 
     @Operation(summary = "find one rental")
     @ApiResponses({ @ApiResponse(responseCode = "200", description = "find one rental by id, authorized with JWTToken"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @GetMapping("/{id}")
-    public RentalDTO getRentalById(@PathVariable Long id) {
-        return this.rentalService.getRentalById(id);
+    public ResponseEntity<RentalDTO> getRentalById(@PathVariable Long id) {
+        RentalDTO rentalDTO= this.rentalService.getRentalById(id);
+        return new ResponseEntity<>(rentalDTO, HttpStatus.OK);
     }
 
     @Operation(summary = "update one rental")

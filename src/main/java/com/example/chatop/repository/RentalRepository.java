@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * Build RentalRepository
  * extends CrudRepository from tools Jpa
- * Use method findAll and findRentalByRentalId
+ * Use method findAll, findAllRentalByUser_Id and findRentalById
  * @Params Long id
  */
 

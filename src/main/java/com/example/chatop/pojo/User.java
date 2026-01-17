@@ -8,8 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -27,7 +25,7 @@ public  class User implements UserDetails {
 
     /**
      * Build Class user
-     * Set up properties (id, name, email(username), password, created_date, updated_at and role)
+     * Set up properties (id, name, email(username), password, created_at, updated_at and role)
      * Implement constructor
      * @Getter and @Setter allows the implementation of getter and setter
      */
