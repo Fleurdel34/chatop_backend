@@ -36,12 +36,12 @@ version: 2.8.15
 link documentation swagger: http://localhost:8080/swagger-ui.html
 
 ## Folder created
-config
+config -> handling openApiConfig
 controller
 dto
 enumération
-exception
+exception -> handling exception
 pojo
 repository
-security
+security -> handlingJWT
 service
